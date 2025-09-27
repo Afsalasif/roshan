@@ -8,9 +8,9 @@ import ShowcaseClient from './components/showcaseClient'
 type ValidSlug = keyof typeof optimizedImageData;
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Generate static params for all valid showcase categories
@@ -24,7 +24,7 @@ export async function generateStaticParams() {
 
 // Generate metadata for each page
 export async function generateMetadata({ params }: PageProps) {
-  const { slug } = params;
+  const { slug } = await params;
   
   // Check if slug is valid
   if (!optimizedImageData[slug as ValidSlug]) {
@@ -47,8 +47,8 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-const ShowcasePage = ({ params }: PageProps) => {
-  const { slug } = params;
+const ShowcasePage = async ({ params }: PageProps) => {
+  const { slug } = await params;
   
   // Type-safe validation
   const isValidSlug = (slug: string): slug is ValidSlug => {
